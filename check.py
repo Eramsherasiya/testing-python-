@@ -1,4 +1,4 @@
-print ("hello world")
+# Simple add_number Function 
 def add_number(a , b):
   return a + b
 result = add_number(3,5)
