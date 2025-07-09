@@ -10,7 +10,7 @@ pipline{
 
      stages('Test') {
       steps{
-        echo 'Testing...'
+        sh 'python --version'
       }
     }
 
