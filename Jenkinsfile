@@ -2,38 +2,40 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
-        DOCKER_IMAGE = "eramsherasiya/webapp:${BUILD_NUMBER}"
+        PYTHON = "python3"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+                git 'https://github.com/Eramsherasiya/testing-python-.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Install Dependencies') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                // If you have a requirements.txt
+                sh 'if [ -f requirements.txt ]; then $PYTHON -m pip install --user -r requirements.txt; fi'
             }
         }
 
-        stage('Test Docker Image') {
+        stage('Run Python App') {
             steps {
-                sh 'docker run --rm $DOCKER_IMAGE echo "Image built successfully!"'
+                // Replace app.py with your main script
+                sh '$PYTHON app.py'
             }
         }
 
-        stage('Push Docker Image') {
-            when {
-                expression { currentBuild.currentResult == "SUCCESS" }
-            }
+        stage('Success') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                    sh 'docker push $DOCKER_IMAGE'
-                }
+                echo 'Pipeline completed successfully!'
             }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
