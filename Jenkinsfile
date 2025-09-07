@@ -24,15 +24,14 @@ pipeline {
                 sh 'docker run --rm $DOCKER_IMAGE echo "Image built successfully!"'
             }
         }
-    }
 
-    post {
-        success {
-            stage('Push Docker Image') {
-                steps {
-                    withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                        sh 'docker push $DOCKER_IMAGE'
-                    }
+        stage('Push Docker Image') {
+            when {
+                expression { currentBuild.currentResult == "SUCCESS" }
+            }
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
+                    sh 'docker push $DOCKER_IMAGE'
                 }
             }
         }
