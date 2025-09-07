@@ -1,13 +1,9 @@
 pipeline {
-    agent {
-        docker { 
-            image 'python:3.11'   // Use official Python Docker image
-            args '-u root:root'   // Run as root to allow pip installs
-        }
-    }
+    agent any
 
     environment {
-        PIP = 'pip'  // You can call pip via ${PIP}
+        PIP = 'pip3'   // Use pip3 on the Jenkins server
+        PYTHON = 'python3'
     }
 
     stages {
@@ -26,7 +22,7 @@ pipeline {
 
         stage('Run Python App') {
             steps {
-                sh 'python main.py'  // Replace main.py with your actual entrypoint
+                sh '${PYTHON} main.py'   // Replace main.py with your script
             }
         }
     }
