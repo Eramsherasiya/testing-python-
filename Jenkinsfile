@@ -6,12 +6,14 @@ pipeline {
         DOCKER_IMAGE = "eramsherasiya/webapp:${BUILD_NUMBER}"
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/Eramsherasiya/testing-python-.git'
-            }
-        }
+  stage('Checkout Code') {
+    steps {
+        git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+    }
+}
+
+
+    
 
         stage('Build Docker Image') {
             steps {
