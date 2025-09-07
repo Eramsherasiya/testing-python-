@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
-        DOCKER_IMAGE = "yourdockerhubusername/webapp:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "eramsherasiya/webapp:${BUILD_NUMBER}"  // replace with your Docker Hub username
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/YeshaShah13/labwork-4.git'
+                git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
             }
         }
 
@@ -28,12 +28,8 @@ pipeline {
 
     post {
         success {
-            stage('Push Docker Image') {
-                steps {
-                    withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                        sh 'docker push $DOCKER_IMAGE'
-                    }
-                }
+            withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
     }
