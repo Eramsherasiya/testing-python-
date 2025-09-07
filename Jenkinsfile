@@ -5,12 +5,12 @@ pipeline {
         PYTHON = "python3"
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/Eramsherasiya/testing-python-.git'
-            }
-        }
+    stage('Checkout Code') {
+    steps {
+        git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+    }
+}
+
 
         stage('Install Dependencies') {
             steps {
