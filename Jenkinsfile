@@ -6,14 +6,12 @@ pipeline {
         DOCKER_IMAGE = "eramsherasiya/webapp:${BUILD_NUMBER}"
     }
 
-  stage('Checkout Code') {
-    steps {
-        git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
-    }
-}
-
-
-    
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -23,14 +21,18 @@ pipeline {
 
         stage('Test Docker Image') {
             steps {
-                sh 'docker run --rm $DOCKER_IMAGE echo "✅ Image built successfully!"'
+                sh 'docker run --rm $DOCKER_IMAGE echo "Image built successfully!"'
             }
         }
+    }
 
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                    sh 'docker push $DOCKER_IMAGE'
+    post {
+        success {
+            stage('Push Docker Image') {
+                steps {
+                    withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
+                        sh 'docker push $DOCKER_IMAGE'
+                    }
                 }
             }
         }
