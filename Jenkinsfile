@@ -1,39 +1,30 @@
 pipeline {
     agent any
 
-    environment {
-        PYTHON = "python3"
-    }
-
-    stage('Checkout Code') {
-    steps {
-        git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
-    }
-}
-
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
-                // If you have a requirements.txt
-                sh 'if [ -f requirements.txt ]; then $PYTHON -m pip install --user -r requirements.txt; fi'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Python App') {
             steps {
-                // Replace app.py with your main script
-                sh '$PYTHON app.py'
-            }
-        }
-
-        stage('Success') {
-            steps {
-                echo 'Pipeline completed successfully!'
+                sh 'python main.py'
             }
         }
     }
 
     post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
         failure {
             echo 'Pipeline failed!'
         }
