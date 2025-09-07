@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub')
-        DOCKER_IMAGE = "eramsherasiya/webapp:${BUILD_NUMBER}"  // replace with your Docker Hub username
+        DOCKER_IMAGE = "eramsherasiya/webapp:${BUILD_NUMBER}"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+                git 'https://github.com/Eramsherasiya/testing-python-.git'
             }
         }
 
@@ -21,15 +21,15 @@ pipeline {
 
         stage('Test Docker Image') {
             steps {
-                sh 'docker run --rm $DOCKER_IMAGE echo "Image built successfully!"'
+                sh 'docker run --rm $DOCKER_IMAGE echo "✅ Image built successfully!"'
             }
         }
-    }
 
-    post {
-        success {
-            withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
-                sh 'docker push $DOCKER_IMAGE'
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry([credentialsId: 'dockerhub', url: '']) {
+                    sh 'docker push $DOCKER_IMAGE'
+                }
             }
         }
     }
