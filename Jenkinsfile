@@ -1,34 +1,19 @@
 pipeline {
-    agent any
-
-    environment {
-        PIP = 'pip3'   // Use pip3 on the Jenkins server
-        PYTHON = 'python3'
+    agent {
+        docker {
+            image 'jenkins-python:latest'
+        }
     }
-
     stages {
-        stage('Checkout Code') {
+        stage('Install requirements') {
             steps {
-                git branch: 'main', url: 'https://github.com/Eramsherasiya/testing-python-.git'
+                sh 'pip3 install -r requirements.txt'
             }
         }
-
-        stage('Install Dependencies') {
+        stage('Run Python') {
             steps {
-                sh '${PIP} install --upgrade pip'
-                sh '${PIP} install -r requirements.txt'
+                sh 'python3 your_script.py'
             }
         }
-
-        stage('Run Python App') {
-            steps {
-                sh '${PYTHON} main.py'   // Replace main.py with your script
-            }
-        }
-    }
-
-    post {
-        success { echo 'Pipeline succeeded!' }
-        failure { echo 'Pipeline failed!' }
     }
 }
